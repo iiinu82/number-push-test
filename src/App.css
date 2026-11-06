@@ -1,0 +1,172 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f6f8;
+  color: #333;
+}
+
+.adminContainer {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 30px 20px 50px;
+}
+
+.pageTitle {
+  margin-bottom: 30px;
+  font-size: 28px;
+  text-align: center;
+}
+
+.settingsSection,
+.visitSection,
+.resultSection {
+  margin-bottom: 25px;
+  padding: 24px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.sectionTitle {
+  margin-bottom: 20px;
+  font-size: 20px;
+}
+
+.formGroup {
+  margin-bottom: 20px;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+.textInput,
+.numberInput,
+.timeInput,
+.dateInput {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.inputWithUnit {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.numberInput {
+  flex: 1;
+}
+
+.notificationSetting {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.notificationSetting > label:first-child {
+  margin-bottom: 0;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 52px;
+  height: 30px;
+  margin: 0;
+}
+
+.switch input {
+  display: none;
+}
+
+.switchSlider {
+  position: absolute;
+  inset: 0;
+  background: #ccc;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.switchSlider::before {
+  content: "";
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  left: 3px;
+  top: 3px;
+  background: #fff;
+  border-radius: 50%;
+  transition: 0.2s;
+}
+
+.switch input:checked + .switchSlider {
+  background: #2196f3;
+}
+
+.switch input:checked + .switchSlider::before {
+  transform: translateX(22px);
+}
+
+.saveButton,
+.visitButton {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 6px;
+  background: #333;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.visitButton {
+  margin-top: 12px;
+}
+
+.saveButton:hover,
+.visitButton:hover {
+  opacity: 0.8;
+}
+
+.visitStatus {
+  margin-top: 20px;
+  padding: 15px;
+  background: #f1f3f5;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.priceResult {
+  padding: 25px 10px;
+  text-align: center;
+}
+
+.priceLabel {
+  display: block;
+  margin-bottom: 8px;
+  color: #666;
+}
+
+.priceValue {
+  font-size: 42px;
+  font-weight: bold;
+}
+
+.priceUnit {
+  margin-left: 5px;
+  font-size: 18px;
+}
