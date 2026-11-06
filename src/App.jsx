@@ -29,6 +29,8 @@ function App() {
   // 現在選択している月の利用回数
   const [visitCount, setVisitCount] = useState(0);
 
+  const [fcmToken, setFcmToken] = useState("");
+
   // 通知のkey
   const VAPID_KEY =
     "BARsixprIuweEwsLPECDCJNtgoGocIYvBtW2axjqbdgLHEdcIbX5xQxhFZ0cne2BlHenJDYxFz38H4RYQ7YGD-s";
@@ -47,6 +49,7 @@ function App() {
         vapidKey: VAPID_KEY,
       });
 
+      setFcmToken(token);
       console.log("FCMトークン:", token);
     } catch (error) {
       console.error("通知設定エラー:", error);
@@ -177,6 +180,15 @@ function App() {
     <>
       <main className="adminContainer">
         <h1 className="pageTitle">ジム料金コスパ通知</h1>
+        <div>
+          <p>FCMトークン</p>
+          <textarea
+            value={fcmToken}
+            readOnly
+            rows={5}
+            style={{ width: "100%", wordBreak: "break-all" }}
+          />
+        </div>
         <h2>{username ? `こんにちは${username}さん` : ""}</h2>
 
         <section className="visitSection">
