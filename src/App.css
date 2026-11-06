@@ -121,7 +121,8 @@ body {
 }
 
 .saveButton,
-.visitButton {
+.visitButton,
+.permissionButton {
   width: 100%;
   padding: 14px;
   border: none;
@@ -138,8 +139,14 @@ body {
 }
 
 .saveButton:hover,
-.visitButton:hover {
+.visitButton:hover,
+.permissionButton:hover {
   opacity: 0.8;
+}
+
+.permissionButton {
+  background-color: #ff1e1e;
+  margin-top: 12px;
 }
 
 .visitStatus {

@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
+import { getToken } from "firebase/messaging";
 import { signInAnonymously, onAuthStateChanged } from "firebase/auth";
 import { doc, setDoc, getDoc, arrayUnion } from "firebase/firestore";
-import { auth, db } from "./firebase";
+import { auth, db, messaging } from "./firebase";
 import "./App.css";
 
 function App() {
@@ -28,6 +29,31 @@ function App() {
   // 現在選択している月の利用回数
   const [visitCount, setVisitCount] = useState(0);
 
+  // 通知のkey
+  const VAPID_KEY =
+    "BARsixprIuweEwsLPECDCJNtgoGocIYvBtW2axjqbdgLHEdcIbX5xQxhFZ0cne2BlHenJDYxFz38H4RYQ7YGD-s";
+
+  //! 通知を許可する関数
+  const handleNotificationPermission = async () => {
+    try {
+      const permission = await Notification.requestPermission();
+
+      if (permission !== "granted") {
+        console.log("通知が許可されませんでした");
+        return;
+      }
+
+      const token = await getToken(messaging, {
+        vapidKey: VAPID_KEY,
+      });
+
+      console.log("FCMトークン:", token);
+    } catch (error) {
+      console.error("通知設定エラー:", error);
+    }
+  };
+
+  //! 開いた時のuseEffect
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       try {
@@ -257,6 +283,12 @@ function App() {
 
           <button className="saveButton" onClick={handleSaveSettings}>
             設定を保存
+          </button>
+          <button
+            className="permissionButton"
+            onClick={handleNotificationPermission}
+          >
+            通知を許可する
           </button>
         </section>
       </main>
