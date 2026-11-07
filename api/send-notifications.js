@@ -89,19 +89,14 @@ export default async function handler(req, res) {
         (date) => typeof date === "string" && date.startsWith(currentMonth),
       ).length;
 
-      // 今月まだ利用していなければスキップ
-      if (visitCount === 0) {
-        skippedCount++;
-        continue;
-      }
-
-      // 1回あたりの料金
-      const pricePerVisit = Math.floor(
-        Number(user.monthlyFee || 0) / visitCount,
-      );
+      //   一回あたりの料金  一度も行っていないなら月額料金(無ければ0)。一度でも行っていれば割った額
+      const pricePerVisit =
+        visitCount === 0
+          ? Number(user.monthlyFee || 0)
+          : Math.floor(Number(user.monthlyFee || 0) / visitCount);
 
       try {
-        // FCMに通知を依頼
+        // FCMに通知を依頼（重要）
         await messaging.send({
           token: user.fcmToken,
           notification: {
@@ -110,7 +105,7 @@ export default async function handler(req, res) {
           },
         });
 
-        // 通知済みの日付を保存
+        // 通知済みの日付を保存(再度送らないようにするため)
         await userDoc.ref.update({
           lastNotifiedDate: today,
         });
