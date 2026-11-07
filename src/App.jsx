@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
 import { getToken } from "firebase/messaging";
 import { signInAnonymously, onAuthStateChanged } from "firebase/auth";
-import { doc, setDoc, getDoc, arrayUnion } from "firebase/firestore";
+import {
+  doc,
+  setDoc,
+  getDoc,
+  arrayUnion,
+  serverTimestamp,
+} from "firebase/firestore";
 import { auth, db, messaging } from "./firebase";
 import "./App.css";
 
@@ -50,7 +56,24 @@ function App() {
       });
 
       setFcmToken(token);
-      console.log("FCMトークン:", token);
+
+      const user = auth.currentUser;
+
+      if (!user) {
+        console.error("ユーザーが認証されていません");
+        return;
+      }
+
+      await setDoc(
+        doc(db, "users", user.uid),
+        {
+          fcmToken: token,
+          fcmTokenUpdatedAt: serverTimestamp(),
+        },
+        { merge: true },
+      );
+
+      console.log("FCMトークンをFirestoreに保存しました");
     } catch (error) {
       console.error("通知設定エラー:", error);
     }
