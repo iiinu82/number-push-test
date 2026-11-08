@@ -64,8 +64,8 @@ export default async function handler(req, res) {
         continue;
       }
 
-      // 通知時刻が一致しなければスキップ
-      if (user.notificationTime !== currentTime) {
+      // 通知時刻がまだならスキップ
+      if (user.notificationTime > currentTime) {
         skippedCount++;
         continue;
       }
