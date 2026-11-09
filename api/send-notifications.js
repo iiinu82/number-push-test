@@ -63,21 +63,6 @@ export default async function handler(req, res) {
         skippedCount++;
         continue;
       }
-      // test----------------------------------------------------------------------------------
-      // 通知時刻が現在時刻より10分以上先ならスキップ
-      const [hour, minute] = currentTime.split(":").map(Number);
-      const currentMinutes = hour * 60 + minute;
-
-      const [notificationHour, notificationMinute] = user.notificationTime
-        .split(":")
-        .map(Number);
-      const notificationMinutes = notificationHour * 60 + notificationMinute;
-
-      if (notificationMinutes > currentMinutes + 10) {
-        skippedCount++;
-        continue;
-      }
-      // ここまでtest----------------------------------------------------------------------------
 
       // 通知時刻がまだならスキップ
       if (user.notificationTime > currentTime) {
@@ -86,10 +71,10 @@ export default async function handler(req, res) {
       }
 
       // 今日すでに通知済みならスキップ
-      // if (user.lastNotifiedDate === today) {
-      //   skippedCount++;
-      //   continue;
-      // }
+      if (user.lastNotifiedDate === today) {
+        skippedCount++;
+        continue;
+      }
 
       // 通知先トークンがなければスキップ
       if (!user.fcmToken) {

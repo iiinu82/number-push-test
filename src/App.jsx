@@ -203,7 +203,7 @@ function App() {
     <>
       <main className="adminContainer">
         <h1 className="pageTitle">ジム料金コスパ通知</h1>
-        <div>
+        {/* <div>
           <p>FCMトークン</p>
           <textarea
             value={fcmToken}
@@ -211,7 +211,7 @@ function App() {
             rows={5}
             style={{ width: "100%", wordBreak: "break-all" }}
           />
-        </div>
+        </div> */}
         <h2>{username ? `こんにちは${username}さん` : ""}</h2>
 
         <section className="visitSection">
