@@ -100,8 +100,8 @@ export default async function handler(req, res) {
         await messaging.send({
           token: user.fcmToken,
           notification: {
-            title: "number-push-test",
-            body: `今日のジム料金：${pricePerVisit.toLocaleString()}円`,
+            title: "今月のジム：１回",
+            body: `${pricePerVisit.toLocaleString()}円`,
           },
         });
 

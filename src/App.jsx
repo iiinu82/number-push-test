@@ -35,8 +35,11 @@ function App() {
   // 現在選択している月の利用回数
   const [visitCount, setVisitCount] = useState(0);
 
+  // 端末のトークン（今は表示しないので使わない）
   const [fcmToken, setFcmToken] = useState("");
 
+  // カレンダー編集のモーダル開閉
+  const [isVisitModalOpen, setIsVisitModalOpen] = useState(false);
   // 通知のkey
   const VAPID_KEY =
     "BARsixprIuweEwsLPECDCJNtgoGocIYvBtW2axjqbdgLHEdcIbX5xQxhFZ0cne2BlHenJDYxFz38H4RYQ7YGD-s";
@@ -172,6 +175,36 @@ function App() {
     }
   };
 
+  //! 利用日の削除
+  const handleVisitDelete = async (dateToDelete) => {
+    const updatedVisitDates = visitDates.filter(
+      (date) => date !== dateToDelete,
+    );
+
+    setVisitDates(updatedVisitDates);
+
+    const user = auth.currentUser;
+
+    if (!user) {
+      console.error("ユーザーが認証されていません");
+      return;
+    }
+
+    try {
+      await setDoc(
+        doc(db, "users", user.uid),
+        {
+          visitDates: updatedVisitDates,
+        },
+        { merge: true },
+      );
+
+      console.log("利用日を削除しました");
+    } catch (error) {
+      console.error("利用日の削除エラー:", error);
+    }
+  };
+
   //! 初期設定の関数
   const handleSaveSettings = async () => {
     try {
@@ -202,7 +235,7 @@ function App() {
   return (
     <>
       <main className="adminContainer">
-        <h1 className="pageTitle">ジム料金コスパ通知</h1>
+        <h1 className="pageTitle">ジムコスパ</h1>
         {/* <div>
           <p>FCMトークン</p>
           <textarea
@@ -215,7 +248,15 @@ function App() {
         <h2>{username ? `こんにちは${username}さん` : ""}</h2>
 
         <section className="visitSection">
-          <h2 className="sectionTitle">ジム利用日</h2>
+          <div className="visitSectionTop">
+            <h2 className="sectionTitle">ジム利用日</h2>
+            <button
+              className="editVisitButton"
+              onClick={() => setIsVisitModalOpen(true)}
+            >
+              編集
+            </button>
+          </div>
 
           <div className="calendarArea">
             <input
@@ -278,7 +319,7 @@ function App() {
                 type="number"
                 id="monthlyFee"
                 className="numberInput"
-                placeholder="4000"
+                placeholder="3278"
                 min="0"
                 value={monthlyFee}
                 onChange={(e) => setMonthlyFee(e.target.value)}
@@ -290,19 +331,39 @@ function App() {
 
           <div className="formGroup">
             <label htmlFor="notificationTime">通知時間</label>
+            <select
+              id="notificationTime"
+              className="timeInput"
+              value={notificationTime}
+              onChange={(e) => setNotificationTime(e.target.value)}
+            >
+              {Array.from({ length: 144 }, (_, i) => {
+                const hour = Math.floor(i / 6);
+                const minute = (i % 6) * 10;
 
-            <input
+                const time = `${String(hour).padStart(2, "0")}:${String(
+                  minute,
+                ).padStart(2, "0")}`;
+
+                return (
+                  <option key={time} value={time}>
+                    {time}
+                  </option>
+                );
+              })}
+            </select>
+            {/* <input
               type="time"
               id="notificationTime"
               className="timeInput"
               value={notificationTime}
               step="600"
               onChange={(e) => setNotificationTime(e.target.value)}
-            />
+            /> */}
           </div>
 
           <div className="formGroup notificationSetting">
-            <label htmlFor="notificationEnabled">通知</label>
+            <label htmlFor="notificationEnabled">通知を受け取る</label>
 
             <label className="switch">
               <input
@@ -317,16 +378,53 @@ function App() {
           </div>
 
           <button className="saveButton" onClick={handleSaveSettings}>
-            設定を保存
+            設定を保存(上書き)
           </button>
-          <button
-            className="permissionButton"
-            onClick={handleNotificationPermission}
-          >
-            通知を許可する
-          </button>
+          {Notification.permission !== "granted" && (
+            <button
+              className="permissionButton"
+              onClick={handleNotificationPermission}
+            >
+              この端末への通知を許可する
+            </button>
+          )}
         </section>
       </main>
+
+      {/* カレンダー編集のモーダル */}
+      {isVisitModalOpen && (
+        <div className="visitModalOverlay">
+          <div className="visitModal">
+            <div className="visitModalHeader">
+              <h2>ジム利用日を編集</h2>
+
+              <button
+                className="closeVisitModalButton"
+                onClick={() => setIsVisitModalOpen(false)}
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="visitDateList">
+              {[...visitDates]
+                .sort((a, b) => b.localeCompare(a))
+                .map((date) => (
+                  <div className="visitDateItem" key={date}>
+                    <span>{date}</span>
+
+                    <button
+                      className="deleteVisitButton"
+                      onClick={() => handleVisitDelete(date)}
+                    >
+                      削除
+                    </button>
+                  </div>
+                ))}
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
