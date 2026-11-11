@@ -15,6 +15,11 @@ const db = getFirestore();
 const messaging = getMessaging();
 
 // 日本時間の日付・時刻を取得
+// 1794360540000こういう数字を
+// {
+//   date: "2026-11-11",
+//   time: "10:27"
+// } こういう形に変える
 function getJapanDateTime() {
   const now = new Date();
 
@@ -100,7 +105,7 @@ export default async function handler(req, res) {
         await messaging.send({
           token: user.fcmToken,
           notification: {
-            title: "今月のジム：１回",
+            title: "今月のジムコスパ",
             body: `${pricePerVisit.toLocaleString()}円`,
           },
         });

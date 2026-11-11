@@ -245,7 +245,7 @@ function App() {
             style={{ width: "100%", wordBreak: "break-all" }}
           />
         </div> */}
-        <h2>{username ? `こんにちは${username}さん` : ""}</h2>
+        <h2>{username ? `こんにちは ${username}さん` : ""}</h2>
 
         <section className="visitSection">
           <div className="visitSectionTop">
